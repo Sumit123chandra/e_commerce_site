@@ -14,12 +14,15 @@ const getDefaultCart=()=> {
 const ShopContextProvider=(props)=> {
     const [all_product,setAll_Product]=useState([]);
     const [cartItems,setCartItems]=useState(getDefaultCart());
+    const [reviews,setReviews]=useState({});
+    const [user, setUser] = useState(null);
 
     useEffect(()=> {
         fetch('http://localhost:4000/allproducts')
         .then((response)=>response.json())
         .then((data)=>setAll_Product(data))
         .catch((error) => console.error('Error fetching products:', error));
+
 
         if(localStorage.getItem('auth-token')) {
             fetch('http://localhost:4000/getcart',{
@@ -33,9 +36,45 @@ const ShopContextProvider=(props)=> {
             })
             .then((response)=>response.json())
             .then((data)=>setCartItems(data))
+            
+            fetch('http://localhost:4000/user', {
+                method: 'GET',
+                headers: {
+                    'auth-token': `${localStorage.getItem('auth-token')}`
+                }
+            })
+            .then(response => response.json())
+            .then(data => setUser(data))
+            .catch(error => console.error('Error fetching user:', error));
         }
+            
     },[])
     
+    const addReview=async(productId,review)=> {
+        setReviews((prev)=>({
+            ...prev,
+            [productId]:[...(prev[productId] || []),review],
+        }))
+
+        await fetch('http://localhost:4000/addreview',{
+            method:"POST",
+            headers:{
+                Accept:'application/form-data',
+                // Accept:'application/json',
+                'auth-token':`${localStorage.getItem('auth-token')}`,
+                'Content-Type':'application/json',
+            },
+            body:JSON.stringify({productId, ...review}),
+        });
+
+        const response = await fetch(`http://localhost:4000/reviews/${productId}`);
+        const updatedReviews = await response.json();
+        setReviews((prev) => ({
+            ...prev,
+            [productId]: updatedReviews,
+        }));
+    }
+
     const addToCart=async(itemId)=> {
         setCartItems((prev)=>({...prev,[itemId]:prev[itemId]+1}))
         if(localStorage.getItem('auth-token')) {
@@ -98,7 +137,7 @@ const ShopContextProvider=(props)=> {
         return totalItem;
     }
 
-    const contextValue={getTotalCartItems,getTotalCartAmount,all_product,cartItems,addToCart,removeFromCart};
+    const contextValue={getTotalCartItems,getTotalCartAmount,all_product,cartItems,addToCart,removeFromCart,addReview,reviews,user};
     return (
         <ShopContext.Provider value={contextValue}>
             {props.children}

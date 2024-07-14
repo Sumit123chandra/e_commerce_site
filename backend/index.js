@@ -210,6 +210,9 @@ app.get('/popularinwomen',async(req,res)=> {
     res.send(popular_in_women);
 })
 
+
+
+
 //Creating middleware to fetch user
 const fetchUser=async(req,res,next)=> {
     const token=req.header('auth-token');
@@ -237,6 +240,16 @@ app.post('/addtocart',fetchUser,async(req,res)=> {
     res.json({succcess:true,message:"Item Added to cart"});
 })
 
+// Endpoint to get user details
+app.get('/user', fetchUser, async (req, res) => {
+    try {
+        const user = await Users.findById(req.user.id).select('-password');
+        res.json(user);
+    } catch (error) {
+        res.status(500).send('Server Error');
+    }
+});
+
 //Creating endpoint to remove product from cartdata
 app.post('/removefromcart',fetchUser,async(req,res)=> {
     console.log("Removed",req.body.itemId)
@@ -254,6 +267,90 @@ app.post('/getcart',fetchUser,async(req,res)=>{
     let userData=await Users.findOne({_id:req.user.id})
     res.json(userData.cartData);
     
+})
+
+
+//schema for creating reviews
+const Review=mongoose.model("review",{
+    productId:{
+        type:Number,
+        required:true,
+    },
+    userId:{
+        type:String,
+        required:true,
+    },
+    username:{
+        type:String,
+        required:true,
+    },
+    rating:{
+        type:Number,
+        required:true,
+    },
+    comment:{
+        type:String,
+        required:true,
+    },
+    date:{
+        type:Date,
+        default:Date.now,
+    },
+})
+/*
+//endpoint to add a review
+app.post('/addreview',fetchUser,async(req,res)=>{
+    const review=new Review({
+        productId:req.body.productId,
+        userId:req.user.id,
+        username:req.body.username,
+        rating:req.body.rating,
+        comment:req.body.comment,
+    })
+    await review.save()
+    console.log("Review Saved")
+    res.json({
+        success:true,
+        message:"Review added successfully",
+    })
+})
+*/
+// endpoint to add a review
+app.post('/addreview', fetchUser, async (req, res) => {
+    try {
+        const { productId, rating, comment, username } = req.body;
+        
+        if (!productId || !rating || !comment || !username) {
+            return res.status(400).json({ success: false, message: 'All fields are required' });
+        }
+
+        const review = new Review({
+            productId,
+            userId: req.user.id,
+            username,
+            rating,
+            comment
+        });
+        
+        await review.save();
+        console.log("Review Saved");
+        res.json({
+            success: true,
+            message: "Review added successfully"
+        });
+    } catch (error) {
+        console.error('Error saving review:', error);
+        res.status(500).json({ success: false, message: 'Server Error' });
+    }
+});
+
+
+
+//endpoint for fetching review for a product
+app.get('/reviews/:productId',async(req,res)=> {
+    const reviews=await Review.find({productId:req.params.productId})
+    console.log("Reviews fetched");
+    res.send(reviews);
 })
 
 app.listen (port,(error)=>{

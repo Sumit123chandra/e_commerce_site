@@ -14,6 +14,9 @@
     border-radius: 40px;
     border: 1px solid grey;
 }
+.shopcategory-sort select {
+    border: none;
+}
 .shopcategory-indexSort p span {
     font-weight: 700;
 }

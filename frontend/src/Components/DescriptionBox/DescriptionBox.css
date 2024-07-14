@@ -16,11 +16,19 @@
     height: 70px;
     border: 1px solid grey;
     border-radius: 4px;
+    cursor: pointer;
 }
 .descriptionbox-nav-box.fade {
     background: #fbfbfb;
     color: #555;
 }
+
+.descriptionbox-nav-box.active {
+    border-bottom: 2px solod purple;
+    font-weight: bold;
+    color: rgb(71, 71, 238);
+}
+
 .description-description {
     display: flex;
     flex-direction: column;
