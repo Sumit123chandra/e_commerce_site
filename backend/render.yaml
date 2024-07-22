@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: express-app
+    env: node
+    region: oregon
+    buildCommand: 'npm install'
+    startCommand: 'node index.js'
+    autoDeploy: true
+    envVars:
+      - key: MONGO_URI
+        value: 'your-mongo-uri-here'
+      - key: JWT_SECRET
+        value: 'your-jwt-secret-here'
+      - key: PORT
+        value: '4000'
