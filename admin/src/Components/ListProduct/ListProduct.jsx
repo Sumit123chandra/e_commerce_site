@@ -7,7 +7,7 @@ const ListProduct = () => {
   const [allproducts,setallproducts]=useState([]);
 
   const fetchInfo=async()=> {
-    await fetch('http://localhost:4000/allproducts')
+    await fetch('https://shopeasy-76ql.onrender.com/allproducts')
     .then((resp)=>resp.json()
     .then((data)=>{setallproducts(data)}));
   }
@@ -17,7 +17,7 @@ const ListProduct = () => {
   },[])
 
   const remove_product=async(id)=> {
-    await fetch('http://localhost:4000/removeproduct',{
+    await fetch('https://shopeasy-76ql.onrender.com/removeproduct',{
       method:"POST",
       headers:{
         Accept:'application/json',

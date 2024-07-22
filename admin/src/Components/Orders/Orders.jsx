@@ -8,7 +8,7 @@ const Orders = () => {
     useEffect(() => {
         const fetchOrders = async () => {
             try {
-                const response = await fetch('http://localhost:4000/orders');
+                const response = await fetch('https://shopeasy-76ql.onrender.com/orders');
                 const data = await response.json();
                 setOrders(data);
                 setLoading(false);

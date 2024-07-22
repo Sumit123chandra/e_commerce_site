@@ -18,14 +18,14 @@ const ShopContextProvider=(props)=> {
     const [user, setUser] = useState(null);
 
     useEffect(()=> {
-        fetch('http://localhost:4000/allproducts')
+        fetch('https://shopeasy-76ql.onrender.com/allproducts')
         .then((response)=>response.json())
         .then((data)=>setAll_Product(data))
         .catch((error) => console.error('Error fetching products:', error));
 
 
         if(localStorage.getItem('auth-token')) {
-            fetch('http://localhost:4000/getcart',{
+            fetch('https://shopeasy-76ql.onrender.com/getcart',{
                 method:"POST",
                 headers:{
                     Accept:'application/form-data',
@@ -37,7 +37,7 @@ const ShopContextProvider=(props)=> {
             .then((response)=>response.json())
             .then((data)=>setCartItems(data))
             
-            fetch('http://localhost:4000/user', {
+            fetch('https://shopeasy-76ql.onrender.com/user', {
                 method: 'GET',
                 headers: {
                     'auth-token': `${localStorage.getItem('auth-token')}`
@@ -56,7 +56,7 @@ const ShopContextProvider=(props)=> {
             [productId]:[...(prev[productId] || []),review],
         }))
 
-        await fetch('http://localhost:4000/addreview',{
+        await fetch('https://shopeasy-76ql.onrender.com/addreview',{
             method:"POST",
             headers:{
                 Accept:'application/form-data',
@@ -67,7 +67,7 @@ const ShopContextProvider=(props)=> {
             body:JSON.stringify({productId, ...review}),
         });
 
-        const response = await fetch(`http://localhost:4000/reviews/${productId}`);
+        const response = await fetch(`https://shopeasy-76ql.onrender.com/reviews/${productId}`);
         const updatedReviews = await response.json();
         setReviews((prev) => ({
             ...prev,
@@ -81,7 +81,7 @@ const ShopContextProvider=(props)=> {
 
             console.log("Adding to cart:",itemId);
 
-            await fetch('http://localhost:4000/addtocart',{
+            await fetch('https://shopeasy-76ql.onrender.com/addtocart',{
                 method:"POST",
                 headers:{
                     Accept:'application/form-data',
@@ -100,7 +100,7 @@ const ShopContextProvider=(props)=> {
     const removeFromCart=(itemId)=> {
         setCartItems((prev)=>({...prev,[itemId]:prev[itemId]-1}))
         if(localStorage.getItem('auth-token')) {
-            fetch('http://localhost:4000/removefromcart',{
+            fetch('https://shopeasy-76ql.onrender.com/removefromcart',{
                 method:"POST",
                 headers:{
                     Accept:'application/form-data',

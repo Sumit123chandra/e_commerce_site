@@ -11,7 +11,7 @@ const ReviewSection = ({ productId }) => {
     });
 /*
     useEffect(() => {
-        fetch(`http://localhost:4000/reviews/${productId}`)
+        fetch(`https://shopeasy-76ql.onrender.com/reviews/${productId}`)
             .then(response => response.json())
             .then(data => setReviews(data))
             .catch(error => console.error('Error fetching reviews:', error));
@@ -19,7 +19,7 @@ const ReviewSection = ({ productId }) => {
     useEffect(() => {
         const fetchReviews = async () => {
             try {
-                const response = await fetch(`http://localhost:4000/reviews/${productId}`);
+                const response = await fetch(`https://shopeasy-76ql.onrender.com/reviews/${productId}`);
                 const data = await response.json();
                 setReviews(data);
             } catch (error) {

@@ -20,7 +20,7 @@ const CartItems = () => {
 
         const totalAmount=getTotalCartAmount();
         try {
-            const response=await fetch('http://localhost:4000/createorder',{
+            const response=await fetch('https://shopeasy-76ql.onrender.com/createorder',{
                 method:'POST',
                 headers:{
                     'Content-Type':'application/json',
