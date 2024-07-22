@@ -3,8 +3,8 @@ services:
     name: express-app
     env: node
     region: oregon
-    buildCommand: 'npm install'
-    startCommand: 'node index.js'
+    buildCommand: 'cd backend && npm install'
+    startCommand: 'cd backend && node index.js'
     autoDeploy: true
     envVars:
       - key: MONGO_URI
