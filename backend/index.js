@@ -6,7 +6,6 @@ const jwt=require("jsonwebtoken");
 const multer=require("multer");
 const path=require("path");
 const cors=require('cors');
-
 app.use(express.json());
 app.use(cors());
 
@@ -345,13 +344,70 @@ app.post('/addreview', fetchUser, async (req, res) => {
 });
 
 
+//Creating an order schema
+const Order = mongoose.model("Order", {
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Users",
+        required: true,
+    },
+    products: [
+        {
+            productId: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Product",
+                required: true,
+            },
+            quantity: {
+                type: Number,
+                required: true,
+            },
+        },
+    ],
+    totalAmount: {
+        type: Number,
+        required: true,
+    },
+    date: {
+        type: Date,
+        default: Date.now,
+    },
+});
 
-//endpoint for fetching review for a product
-app.get('/reviews/:productId',async(req,res)=> {
-    const reviews=await Review.find({productId:req.params.productId})
-    console.log("Reviews fetched");
-    res.send(reviews);
+//Creating an endpoint for creating an order
+app.post('/createorder', fetchUser, async (req, res) => {
+    try {
+        const { products, totalAmount } = req.body;
+
+        if (!products || products.length === 0) {
+            return res.status(400).json({ success: false, message: 'No products in the order' });
+        }
+
+        const order = new Order({
+            userId: req.user.id,
+            products,
+            totalAmount,
+        });
+
+        await order.save();
+        res.json({ success: true, message: 'Order created successfully', order });
+    } catch (error) {
+        console.error('Error creating order:', error);
+        res.status(500).json({ success: false, message: 'Server Error' });
+    }
+});
+
+//Creating endpoint to fetch orders with user details
+app.get('/orders',async(req,res)=>{
+    try {
+        const orders=await Order.find().populate('userId','name email')
+        res.json(orders);
+    } catch (error) {
+        console.error("Error fetching orders:",error)
+        res.status(500).json({success:false,message:'Server Error'})
+    }
 })
+
 
 app.listen (port,(error)=>{
     if(!error) {

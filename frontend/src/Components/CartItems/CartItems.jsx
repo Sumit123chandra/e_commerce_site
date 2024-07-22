@@ -5,6 +5,44 @@ import remove_icon from '../Assets/cart_cross_icon.png'
 
 const CartItems = () => {
     const {getTotalCartAmount,all_product,cartItems,removeFromCart}=useContext(ShopContext)
+
+
+    const handleCheckout=async()=>{
+        const products=all_product.map(product=>{
+            if(cartItems[product.id]>0) {
+                return {
+                    productId:product._id,
+                    quantity:cartItems[product.id]
+                }
+            }
+            return null;
+        }).filter(item=>item!==null);
+
+        const totalAmount=getTotalCartAmount();
+        try {
+            const response=await fetch('http://localhost:4000/createorder',{
+                method:'POST',
+                headers:{
+                    'Content-Type':'application/json',
+                    'auth-token':localStorage.getItem('auth-token')
+                },
+                body:JSON.stringify({products,totalAmount})
+            })
+
+            const data=await response.json();
+            if(data.success) {
+                alert('Order placed successfully')
+            }
+            else {
+                alert('Failed to place order')
+            }
+        } catch (error) {
+            console.error('Error during checkout:',error)
+            alert('Error during checkout')
+        }
+    };
+
+
   return (
     <div className='cartitems'>
         <div className="cartitems-format-main">
@@ -55,7 +93,7 @@ const CartItems = () => {
                         <h3 className='rupee'>₹{getTotalCartAmount()}</h3>
                     </div>
                 </div>
-                <button>Proceed to Checkout</button>
+                <button onClick={handleCheckout}>Proceed to Checkout</button>
             </div>
             <div className="cartitems-promocode">
                 <p>If you have a promo code, Enter it here</p>

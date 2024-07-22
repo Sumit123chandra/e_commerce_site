@@ -55,3 +55,9 @@
         height: 60px;
     }
 }
+
+@media (max-width:400px) {
+    .old_price{
+        display: none;
+    }
+}

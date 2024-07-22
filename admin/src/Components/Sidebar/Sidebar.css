@@ -32,3 +32,14 @@
         margin: 0;
     }
 }
+@media (max-width:500px) {
+    .sidebar {
+        flex-direction: column;
+        padding: 10px 0px ;
+        justify-content: center;
+    }
+    .sidebar-item{
+        padding: 4px 4px;
+        border: 1 px solid gray;
+    }
+}

@@ -34,7 +34,7 @@ const ListProduct = () => {
       <div className="listproduct-format-main">
         <p>Products</p>
         <p>Title</p>
-        <p>Old Price</p>
+        <p class="old_price">Old Price</p>
         <p>New Price</p>
         <p>Category</p>
         <p>Remove</p>
@@ -44,8 +44,8 @@ const ListProduct = () => {
           {allproducts.map((product,index)=>{
             return <><div key={index} className="listproduct-format-main listproduct-format">
               <img src={product.image} alt="" className="listproduct-product-icon" />
-              <p>{product.name}</p>
-              <p className='price'>₹{product.old_price}</p>
+              <p >{product.name}</p>
+              <p className='price old_price'>₹{product.old_price}</p>
               <p className='price'>₹{product.new_price}</p>
               <p>{product.category}</p>
               <img onClick={()=>{remove_product(product.id)}} src={cross_icon} alt="" className="listproduct-remove-icon" />
