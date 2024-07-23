@@ -21,6 +21,13 @@ const ShopContextProvider=(props)=> {
         fetch('https://shopeasy-76ql.onrender.com/allproducts')
         .then((response)=>response.json())
         .then((data)=>setAll_Product(data))
+        // .then((data) => {
+        //     const updatedProducts = data.map(product => ({
+        //         ...product,
+        //         image: `https://shopeasy-76ql.onrender.com/images/${product.image}`,
+        //     }));
+        //     setAll_Product(updatedProducts);
+        // })
         .catch((error) => console.error('Error fetching products:', error));
 
 

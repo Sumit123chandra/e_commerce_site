@@ -6,6 +6,12 @@ services:
     buildCommand: 'cd backend && npm install'
     startCommand: 'cd backend && node index.js'
     autoDeploy: true
+
+    plan: free
+    disk:
+      name: images
+      mountPath: /opt/render/project/src/upload/images
+      
     envVars:
       - key: MONGO_URI
         value: 'mongodb+srv://chandra78sumit:Sumit123%23@cluster0.tuvu5og.mongodb.net/e-commerce'
